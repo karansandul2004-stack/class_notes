@@ -1,0 +1,94 @@
+Understanding MySQL Triggers :
+
+A trigger is a named database object that is associated with a table and activates when a specific event occurs (INSERT, UPDATE, or DELETE). For developers, triggers are best used for:
+
+Data Validation: Ensuring values meet specific criteria before being committed.
+
+Auditing: Automatically logging who changed what and when.
+
+Synchronization: Updating a summary table when a detail table changes.
+
+1. Database Schema
+For an Employee Management System, we need a primary table for emplo=yees and an audit table to track changes.
+
+SQL
+CREATE TABLE employees (
+    emp_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    department VARCHAR(50),
+    salary DECIMAL(10, 2),
+    last_modified DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE employee_audit (
+    audit_id INT AUTO_INCREMENT PRIMARY KEY,
+    emp_id INT,
+    action_type VARCHAR(50),
+    old_salary DECIMAL(10, 2),
+    new_salary DECIMAL(10, 2),
+    changed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
+SQL
+INSERT INTO employees (name, department, salary) VALUES
+('Aavish Sharma', 'Engineering', 75000), ('Priya Patel', 'HR', 60000),
+('Arjun Verma', 'Engineering', 82000), ('Sanya Malhotra', 'Marketing', 55000),
+('Ishaan Gupta', 'Sales', 50000), ('Ananya Iyer', 'Engineering', 78000),
+('Rohan Das', 'IT', 65000), ('Meera Reddy', 'Finance', 90000),
+('Aditya Singh', 'Engineering', 72000), ('Kavya Nair', 'HR', 62000),
+('Vikram Joshi', 'Sales', 53000), ('Sneha Kulkarni', 'IT', 67000),
+('Rahul Bose', 'Marketing', 58000), ('Diya Menon', 'Finance', 88000),
+('Aryan Khan', 'Engineering', 80000), ('Tanvi Shah', 'Sales', 51000),
+('Kabir Kapoor', 'IT', 69000), ('Zoya Ansari', 'HR', 61000),
+('Rishi Saxena', 'Finance', 92000), ('Nandini Rao', 'Engineering', 77000);
+3. The Triggers
+A. INSERT Trigger (Validation)
+This trigger ensures that no new employee is added with a salary less than 20,000. If they are, it sets the salary to a minimum wage default.
+
+SQL
+DELIMITER //
+CREATE TRIGGER before_employee_insert
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary < 20000 THEN
+        SET NEW.salary = 20000;
+    END IF;
+END //
+DELIMITER ;
+B. UPDATE Trigger (Auditing)
+This trigger captures the old and new salary whenever an employee's record is updated.
+
+SQL
+DELIMITER //
+CREATE TRIGGER after_employee_update
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    IF OLD.salary <> NEW.salary THEN
+        INSERT INTO employee_audit (emp_id, action_type, old_salary, new_salary)
+        VALUES (OLD.emp_id, 'UPDATE_SALARY', OLD.salary, NEW.salary);
+    END IF;
+END //
+DELIMITER ;
+C. DELETE Trigger (Archiving)
+When a record is deleted, this trigger logs the event so you have a history of who was removed.
+
+SQL
+DELIMITER //
+CREATE TRIGGER after_employee_delete
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO employee_audit (emp_id, action_type, old_salary)
+    VALUES (OLD.emp_id, 'DELETE_USER', OLD.salary);
+END //
+DELIMITER ;
+Developer Pro-Tips
+Avoid Heavy Logic: Triggers run on the database thread. Complex logic or external API calls (if supported via plugins) can significantly slow down your INSERT or UPDATE queries.
+
+Hidden Behavior: Triggers are "invisible" to the application code. Always document them so other developers don't wonder why data is changing "magically."
+
+Recursive Triggers: Be careful not to create a loop where Trigger A updates Table B, and Trigger B updates Table A.
+

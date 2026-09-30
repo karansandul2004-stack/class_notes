@@ -1,0 +1,195 @@
+CREATE TABLE SalesTeam (
+    EmployeeID INT PRIMARY KEY AUTO_INCREMENT,
+    FullName VARCHAR(100),
+    Region VARCHAR(50),
+    SalesAmount DECIMAL(10, 2)
+);
+
+INSERT INTO SalesTeam (FullName, Region, SalesAmount) VALUES
+('Aarav Sharma', 'North', 55000), ('Vihaan Gupta', 'North', 62000),
+('Aditi Rao', 'South', 48000), ('Ananya Iyer', 'South', 71000),
+('Ishaan Malhotra', 'West', 59000), ('Saanvi Joshi', 'West', 42000),
+('Arjun Verma', 'East', 33000), ('Myra Nair', 'East', 51000),
+('Sai Reddy', 'South', 88000), ('Prisha Kapoor', 'North', 45000),
+('Krishna Das', 'East', 29000), ('Zoya Khan', 'West', 75000),
+('Reyansh Singh', 'North', 92000), ('Aanya Patil', 'West', 61000),
+('Vivaan Saxena', 'East', 47000), ('Kiara Bhat', 'South', 53000),
+('Kabir Mistri', 'West', 68000), ('Diya Kulkarni', 'South', 64000),
+('Advait Bose', 'East', 39000), ('Riya Chawla', 'North', 77000);
+
+
+WITH RegionalPerformance AS (
+    SELECT 
+        FullName,
+        Region,
+        SalesAmount,
+        
+        RANK() OVER (PARTITION BY Region ORDER BY SalesAmount DESC) as SalesRank,
+        
+        AVG(SalesAmount) OVER (PARTITION BY Region) as RegionalAvg,
+       
+        SUM(SalesAmount) OVER (ORDER BY SalesAmount DESC) as RunningTotal
+    FROM SalesTeam
+)
+
+
+SELECT * FROM RegionalPerformance
+WHERE SalesRank <= 2;
+
+
+PARTITION BY	Divides the data into logical groups (like buckets for North, South, etc.) before applying the function.
+
+RANK()	Assigns a number to each row within the partition. If two people have the same sales, they get the same rank, and the next rank is skipped.
+
+AVG()	By using OVER(PARTITION BY Region), it calculates the average for that specific region and displays it next to every employee in that region.
+
+SUM()	When used with ORDER BY but without a partition, it creates a Running Total (Cumulative Sum) across the entire dataset.
+
+
+
+WITH RankedSales AS (
+    SELECT 
+        FullName,
+        Region,
+        SalesAmount,
+        LAG(SalesAmount) OVER (PARTITION BY Region ORDER BY SalesAmount DESC) as PreviousHigherSales
+    FROM SalesTeam
+)
+SELECT 
+    FullName,
+    Region,
+    SalesAmount,
+    PreviousHigherSales,
+    COALESCE(PreviousHigherSales - SalesAmount, 0) as GapToLeader
+FROM RankedSales
+ORDER BY Region, SalesAmount DESC;
+
+
+LAG(column, offset)
+What it does: Returns the value from a previous row in the same result set.
+
+Use Case: Comparing this month's revenue to last month's, or (as we did here) comparing a "Silver" performer to a "Gold" performer.
+
+LEAD(column, offset)
+What it does: The opposite of LAG; it reaches forward to a subsequent row.
+
+Use Case: Predicting trends or calculating the time difference between the current event and the next event in a log.
+
+COALESCE()
+Why we used it: The top performer in each region has no one "above" them. LAG() would return NULL for them. COALESCE replaces that NULL with 0 so our math doesn't break.
+
+
+
+
+
+Ranking : 	ROW_NUMBER()	Assigns a unique sequential integer to rows.
+
+RANK() : 	Assigns a rank with gaps if there are ties.
+DENSE_RANK(): 	Assigns a rank without gaps for ties.
+Value / Analytic	
+LEAD()	Accesses data from a subsequent row.
+
+LAG()	Accesses data from a previous row.
+
+FIRST_VALUE()	Returns the first value in a sorted partition.
+
+Aggregate	SUM(), AVG()	Calculates running totals or moving average
+
+
+Tables : 
+SaleID,SaleDate,Region,SalesRep,Amount
+1,2024-01-01,East,Adani,500
+2,2024-01-02,West,Lokesh,300
+3,2024-01-03,East,Rajesh,700
+4,2024-01-04,West,Sapna,400
+5,2024-01-05,East,David,200
+...,...,...,...,...
+20,2024-01-20,West,Arman,450
+
+
+Example 1: Ranking Sales Performance (ROW_NUMBER, RANK, DENSE_RANK)
+This query identifies who the top sellers are in each region.
+
+WITH Sales_CTE AS (
+    -- This CTE prepares our base data
+    SELECT Region, SalesRep, SUM(Amount) as TotalSales
+    FROM SalesData
+    GROUP BY Region, SalesRep
+)
+SELECT 
+    Region, 
+    SalesRep, 
+    TotalSales,
+    ROW_NUMBER() OVER(PARTITION BY Region ORDER BY TotalSales DESC) as RowNum,
+    RANK() OVER(PARTITION BY Region ORDER BY TotalSales DESC) as SalesRank,
+    DENSE_RANK() OVER(PARTITION BY Region ORDER BY TotalSales DESC) as DenseRank
+FROM Sales_CTE;
+
+Why use this? 
+RANK() is great for leaderboards, while ROW_NUMBER() is perfect for pagination or picking exactly one "top" record.
+
+Example 2: Trend Analysis (LAG and LEAD)
+Compare today's sales to yesterday's to see if the trend is up or down.
+
+SELECT 
+    SaleDate, 
+    Amount,
+    LAG(Amount, 1) OVER(ORDER BY SaleDate) as PrevDaySales,
+    Amount - LAG(Amount, 1) OVER(ORDER BY SaleDate) as DailyDifference
+FROM SalesData;
+
+Example 3: Running Totals (SUM as a Window Function)
+Calculate a cumulative total of sales over time.
+
+SELECT 
+    SaleDate, 
+    Region, 
+    Amount,
+    SUM(Amount) OVER(PARTITION BY Region ORDER BY SaleDate) as RunningTotal
+FROM SalesData;
+
+
+Implementation: 7-Day Moving Average Query
+In this example, we first use a CTE to aggregate daily totals (in case there are multiple sales per day), then apply the Window Function.
+
+WITH DailySales AS (
+    -- Step 1: Get total sales for every single day
+    SELECT 
+        SaleDate,
+        SUM(Amount) AS DailyTotal
+    FROM SalesData
+    GROUP BY SaleDate
+)
+-- Step 2: Calculate the 7-day rolling average
+SELECT 
+    SaleDate,
+    DailyTotal,
+    AVG(DailyTotal) OVER (
+        ORDER BY SaleDate 
+        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+    ) AS RollingAvg_7Day
+FROM DailySales
+ORDER BY SaleDate;
+
+ROWS BETWEEN 6 PRECEDING AND CURRENT ROW: This defines the specific "frame." It tells SQL: "Look at the 6 rows before this one and include the current row" (Total = 7 rows).
+
+AVG(DailyTotal): This calculates the average of those specific 7 rows.
+
+OVER (ORDER BY SaleDate): This ensures the window moves chronologically.
+
+
+WITH RECURSIVE cte_employee AS
+(
+  
+   SELECT employee.*, 0 AS hierarchy_level FROM employee
+   WHERE manager_id = 0
+   UNION ALL 
+   SELECT e.*,  cte_employee.hierarchy_level + 1 AS hierarchy_level 
+   FROM employee AS e
+   INNER JOIN cte_employee ON (cte_employee.id = e.manager_id)
+)
+SELECT * FROM cte_employee;
+
+
+
+

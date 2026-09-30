@@ -1,0 +1,65 @@
+SEABORN CHARTS — 2-LINE DESCRIPTIONS
+
+1. Scatter Plot
+Shows the relationship between two numerical variables.
+Useful for identifying correlation, trends, clusters, and outliers.
+
+2. Line Plot
+Shows how a numerical variable changes across an ordered variable, usually time.
+Useful for identifying trends and patterns over time.
+
+3. Bar Plot
+Compares a numerical value across different categories.
+Useful for comparing averages or aggregated values between groups.
+
+4. Count Plot
+Displays the number of observations in each category.
+Useful for understanding the frequency or distribution of categorical data.
+
+5. Histogram
+Shows the distribution of a numerical variable by dividing values into intervals (bins).
+Useful for understanding spread, skewness, and concentration.
+
+6. KDE Plot
+Represents the probability density of a numerical variable using a smooth curve.
+Useful for comparing distributions and identifying peaks.
+
+7. Box Plot
+Summarizes data using median, quartiles, and potential outliers.
+Useful for comparing distributions across multiple categories.
+
+8. Violin Plot
+Combines a box plot with a KDE distribution.
+Useful for understanding both summary statistics and the shape of a distribution.
+
+9. Strip Plot
+Displays individual observations for different categories.
+Useful for seeing the actual data points and their distribution.
+
+10. Swarm Plot
+Displays individual observations while avoiding overlap between points.
+Useful for comparing distributions when the dataset is relatively small.
+
+11. Point Plot
+Displays an estimated value for each category along with uncertainty.
+Useful for comparing trends or averages across categories.
+
+12. Reg Plot
+Creates a scatter plot with a fitted regression line.
+Useful for visualizing the direction and strength of a linear relationship.
+
+13. Joint Plot
+Shows the relationship between two numerical variables along with their individual distributions.
+Supports scatter, regression, KDE, and hexbin views.
+
+14. Pair Plot
+Creates pairwise plots for multiple numerical variables.
+Useful for quickly exploring relationships, distributions, and class-wise patterns.
+
+15. Heatmap
+Represents numerical values using colors in a matrix-like format.
+Commonly used to visualize correlation matrices and identify strong relationships.
+
+17. Boxen Plot
+Provides a detailed view of the distribution, especially for large datasets.
+It shows multiple quantiles and is useful for analyzing tails and extreme values.

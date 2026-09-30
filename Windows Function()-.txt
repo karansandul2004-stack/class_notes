@@ -1,0 +1,64 @@
+Windows Function():-
+Aggregate Functions:
+max(), min(), count(), sum(), std(), avg()
+
+rank():- Assigns a rank with gaps if there are ties.
+dense_rank():-Assigns a rank without gaps for ties.
+Value / Analytic
+Lead() Accesses data from a subsequent row.
+
+LAG() Accesses datafrom previous row.
+
+First_Value() Returns the first value in a sorted partition.
+
+Aggregate Sum(), Avg() Calculates running totals or moving average.
+
+row_number():-Ranking: Row_Number() Assigns a unique sequential integer to rows.
+
+
+Lag(column, offset):-
+What it does: Returns the value from a previous row in the same result set.
+ 
+Use Case: Comparing this month's revenue to last month's, or (as we did here) comparing a 'Silver' performer to a "Gold" performer.
+
+Lead(column, offset):- 
+What it does: The opposite of Lag; it reaches forward to a subsequent row.
+
+Use Case: Predicting trends or calculating the time difference between the current event and the next event in a log.
+
+Coalesce():-
+Why we used it: The top performer in each region has no one "above" them. Lag() would return NULL for them.
+Coalesce replaces that null with 0 so our math doesn't break.
+
+Partition by:
+over (partition by column_name)
+
+Common Table Expressions:
+with <aliasname> as 
+      sql queries
+
+With RankSales as (
+     Select 
+           Fullname,
+           Region,
+           SalesAmount,
+           Lag(SalesAmount) over (partition by region order by Salesamount desc)
+           as PreviousHighersales
+    From salesteam
+)
+Select
+      Fullname.
+      region.
+      salesamount,
+      previoushighersales,
+      coalesce(previousHighersales - salesamount, 0) as gaptoleader
+From Rankedsales
+
+Partition by :- Divides the data into logical groups (like buckers for North, South, etc.) before applying the function.
+
+Rank():- Assigns a number to each row within the partition. If two people have the same sales, they get same rank and the next 
+         rank is skipped.
+
+AVG():- By using over(Partition by Region), it calculates the average for that specific region and displays it next to every employee in that region.
+
+Sum():- When used with order by but without a partition, it create a running total.

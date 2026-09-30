@@ -1,0 +1,417 @@
+use corporated8;
+Q1. Write a query to fetch all employee name and their respective department names.
+
+mysql> select e.emp_name, e.dep_id, d.dept_name
+    -> from employees e
+    -> join departments d on e.dep_id = d.dep_id;
++----------+--------+-------------+
+| emp_name | dep_id | dept_name   |
++----------+--------+-------------+
+| Sonu     |      2 | Engineering |
+| Ram      |      2 | Engineering |
+| Dheer    |      2 | Engineering |
+| David    |      3 | Sales       |
+| Montu    |      3 | Sales       |
+| Rudra    |      3 | Sales       |
+| Nandini  |      1 | HR          |
+| Ethan    |      1 | HR          |
++----------+--------+-------------+
+8 rows in set (0.00 sec)
+
+Q2. Find all employees who do not have manager.
+
+mysql> select emp_name, manager_id from employees
+    -> where manager_id is Null;
++----------+------------+
+| emp_name | manager_id |
++----------+------------+
+| Sonu     |       NULL |
+| David    |       NULL |
+| Nandini  |       NULL |
++----------+------------+
+3 rows in set (0.00 sec)
+
+Q3. List the unique product categories available in the products table.
+
+mysql> select Distinct(category) from products;
++-------------+
+| category    |
++-------------+
+| Electronics |
+| Software    |
+| Hardware    |
++-------------+
+3 rows in set (0.00 sec)
+
+Q4. Fetch the details of employees hired after January 1st, 2022.
+
+mysql> select * from employees
+    -> where hire_date > '2022-01-01';
++--------+----------+------------+----------+--------+------------+
+| emp_id | emp_name | manager_id | salary   | dep_id | hire_date  |
++--------+----------+------------+----------+--------+------------+
+|    103 | Dheer    |        101 | 80000.00 |      2 | 2022-03-10 |
+|    105 | Montu    |        104 | 70000.00 |      3 | 2022-01-10 |
+|    106 | Rudra    |        104 | 65000.00 |      3 | 2023-05-18 |
++--------+----------+------------+----------+--------+------------+
+3 rows in set (0.00 sec)
+
+Q5. Calculate the total revenue generated across all sales.
+
+mysql> select sum(amount) from sales;
++-------------+
+| sum(amount) |
++-------------+
+|    10800.00 |
++-------------+
+1 row in set (0.01 sec)
+
+Q6. Display the top 3 highest-paid employees.
+
+mysql> select emp_name, salary from employees
+    -> order by salary desc
+    -> limit 3;
++----------+-----------+
+| emp_name | salary    |
++----------+-----------+
+| Ethan    | 250000.00 |
+| Sonu     | 120000.00 |
+| David    | 110000.00 |
++----------+-----------+
+3 rows in set (0.00 sec)
+
+Q7. Count the total number of employees in each department.
+
+mysql> SELECT d.dept_name,
+    ->        COUNT(*) AS total_employees
+    -> FROM employees e
+    -> JOIN departments d
+    -> ON e.dep_id = d.dep_id
+    -> GROUP BY d.dept_name;
++-------------+-----------------+
+| dept_name   | total_employees |
++-------------+-----------------+
+| HR          |               2 |
+| Engineering |               3 |
+| Sales       |               3 |
++-------------+-----------------+
+3 rows in set (0.00 sec)
+
+
+Q8. Find the average salary of employees in the 'Engineering' department.
+
+SELECT AVG(e.salary) AS average_salary
+FROM employees e
+JOIN departments d
+ON e.dep_id = d.dep_id
+WHERE d.dept_name = 'Engineering';
++----------------+
+| average_salary |
++----------------+
+|   98333.333333 |
++----------------+
+1 row in set (0.00 sec)
+
+Q9. List all sales Transactions where the total amount spent is greater than $1,500.
+
+mysql> select * from sales where amount > 1500;
++---------+--------+------------+------------+----------+---------+
+| sale_id | emp_id | product_id | sale_date  | quantity | amount  |
++---------+--------+------------+------------+----------+---------+
+|       1 |    104 |          3 | 2024-01-10 |        5 | 2500.00 |
+|       2 |    105 |          1 | 2024-01-12 |        2 | 2400.00 |
++---------+--------+------------+------------+----------+---------+
+2 rows in set (0.06 sec)
+
+Q10. Show employees names in uppercase and their hire dates formatted as 'YYYY-MM'.
+
+mysql> select upper(emp_name) as employee_name, Date_format(hire_date, '%Y-%M') as joinning_date
+    -> from employees;
++---------------+----------------+
+| employee_name | joinning_date  |
++---------------+----------------+
+| SONU          | 2021-January   |
+| RAM           | 2021-June      |
+| DHEER         | 2022-March     |
+| DAVID         | 2020-November  |
+| MONTU         | 2022-January   |
+| RUDRA         | 2023-May       |
+| NANDINI       | 2019-August    |
+| ETHAN         | 2020-September |
++---------------+----------------+
+8 rows in set (0.00 sec)
+
+Q11. Find the total quantity of 'Laptop' Products sold.
+
+mysql> select p.product_name, sum(s.quantity) as total_quantity
+    -> from sales s join products p
+    -> on s.product_id = p.product_id
+    -> where p.product_id = 1;
++--------------+----------------+
+| product_name | total_quantity |
++--------------+----------------+
+| Laptop       |              3 |
++--------------+----------------+
+1 row in set (0.01 sec)
+
+Q12. Retrieve all employees whose names start with the letter 'E'.
+like
+not like
+
+pattern matching:
+abc%: start with abc
+%abc%: 
+%abc: ending with abc
+
+mysql> select emp_name from employees
+    -> where emp_name like 'e%';
++----------+
+| emp_name |
++----------+
+| Ethan    |
++----------+
+1 row in set (0.01 sec)
+
+Q13. Get the maximum and minimum salary offered across the company.
+
+mysql> select max(salary) as Highest_salary, min(salary) as Lowest_salary from employees;
++----------------+---------------+
+| Highest_salary | Lowest_salary |
++----------------+---------------+
+|      250000.00 |      65000.00 |
++----------------+---------------+
+1 row in set (0.00 sec)
+
+Q14. Find the product IDs that have never been sold.
+
+mysql> SELECT p.product_id
+    -> FROM products p
+    -> WHERE NOT EXISTS (
+    ->     SELECT *
+    ->     FROM sales s
+    ->     WHERE s.product_id = p.product_id
+    -> );
++------------+
+| product_id |
++------------+
+|          5 |
++------------+
+1 row in set (0.00 sec)
+
+-> SELECT p.product_id
+FROM products p
+LEFT JOIN sales s
+ON p.product_id = s.product_id
+WHERE s.product_id IS NULL;
+
+Q15. Show the revenue generated by each employee, sorted from highest to lowest.
+
+mysql> select e.emp_name,
+    -> sum(s.quantity * s.amount) as total_revenue
+    -> from employees e
+    -> join sales s
+    -> on e.emp_id = s.emp_id
+    -> group by e.emp_id, e.emp_name
+    -> order by total_revenue desc;
++----------+---------------+
+| emp_name | total_revenue |
++----------+---------------+
+| David    |      23700.00 |
+| Montu    |       9600.00 |
+| Ethan    |       9000.00 |
+| Rudra    |       2000.00 |
+| Ram      |        500.00 |
++----------+---------------+
+5 rows in set (0.01 sec)
+
+Intermediate Questions:
+
+Q16. Find the department that has the highest total salary expense.
+
+mysql> select d.dept_name, Sum(e.salary) as total_salary
+    -> from employees e
+    -> join departments d
+    -> on e.dep_id = d.dep_id
+    -> group by d.dep_id, d.dept_name
+    -> order by total_salary desc
+    -> limit 1;
++-----------+--------------+
+| dept_name | total_salary |
++-----------+--------------+
+| HR        |    340000.00 |
++-----------+--------------+
+1 row in set (0.00 sec)
+
+Q17. List all employees who earn more than the average salary of the entire company.
+
+mysql> select emp_name, salary
+    -> from employees
+    -> where salary
+    -> > (select avg(salary)
+    -> from employees);
++----------+-----------+
+| emp_name | salary    |
++----------+-----------+
+| Sonu     | 120000.00 |
+| Ethan    | 250000.00 |
++----------+-----------+
+2 rows in set (0.02 sec)
+
+Q18. Write a query to find the second highest salary without using limit.
+
+mysql> select Max(salary) as Second_highest
+    -> from employees
+    -> where salary < (
+    -> select Max(salary)
+    -> from employees
+    -> );
++----------------+
+| Second_highest |
++----------------+
+|      120000.00 |
++----------------+
+1 row in set (0.00 sec)
+
+Q19. Find all employees who earn more than their respective managers.
+
+mysql> SELECT e.emp_name AS employee_name,
+    ->        e.salary AS employee_salary,
+    ->        m.emp_name AS manager_name,
+    ->        m.salary AS manager_salary
+    -> FROM employees e
+    -> JOIN employees m
+    -> ON e.manager_id = m.emp_id
+    -> WHERE e.salary > m.salary;
++---------------+-----------------+--------------+----------------+
+| employee_name | employee_salary | manager_name | manager_salary |
++---------------+-----------------+--------------+----------------+
+| Ethan         |       250000.00 | Sonu         |      120000.00 |
++---------------+-----------------+--------------+----------------+
+1 row in set (0.01 sec)
+
+Q20.Generate a report showing each manager's name and the total number of direct reports they manager.
+
+mysql> SELECT m.emp_name AS manager_name,
+    ->        COUNT(e.emp_id) AS total_direct_reports
+    -> FROM employees e
+    -> JOIN employees m
+    -> ON e.manager_id = m.emp_id
+    -> GROUP BY m.emp_id, m.emp_name;
++--------------+----------------------+
+| manager_name | total_direct_reports |
++--------------+----------------------+
+| Sonu         |                    3 |
+| David        |                    2 |
++--------------+----------------------+
+2 rows in set (0.01 sec)
+
+Q21. Calculate the cumulative/running total of sales amounts ordered by sale_date.
+
+mysql> select sale_id,
+    -> sale_date,
+    -> amount,
+    -> sum(amount) over(order by sale_date) as running_total
+    -> from sales;
++---------+------------+---------+---------------+
+| sale_id | sale_date  | amount  | running_total |
++---------+------------+---------+---------------+
+|       1 | 2024-01-10 | 2500.00 |       2500.00 |
+|       2 | 2024-01-12 | 2400.00 |       4900.00 |
+|       3 | 2024-01-15 | 1000.00 |       5900.00 |
+|       4 | 2024-02-01 | 1000.00 |       6900.00 |
+|       5 | 2024-02-14 | 1200.00 |       8100.00 |
+|       6 | 2024-02-20 | 1200.00 |       9300.00 |
+|       7 | 2024-03-05 |  500.00 |       9800.00 |
+|       8 | 2024-04-16 | 1000.00 |      10800.00 |
++---------+------------+---------+---------------+
+8 rows in set (0.01 sec)
+
+Q22. Find the most frequently purchased product based on total quantity sold.
+
+mysql> select
+    -> product_id,
+    -> count(*) as product_count
+    -> from sales
+    -> group by product_id
+    -> order by product_count desc
+    -> limit 1;
++------------+---------------+
+| product_id | product_count |
++------------+---------------+
+|          3 |             3 |
++------------+---------------+
+1 row in set (0.00 sec)
+
+Q24. Identify the months in 2024 that $4,000 in total sales revenue.
+
+mysql> select sale_date, amount,
+    -> quantity * amount as total_revenue
+    -> from sales
+    -> where quantity * amount > 4000;
++------------+---------+---------------+
+| sale_date  | amount  | total_revenue |
++------------+---------+---------------+
+| 2024-01-10 | 2500.00 |      12500.00 |
+| 2024-01-12 | 2400.00 |       4800.00 |
+| 2024-01-15 | 1000.00 |      10000.00 |
+| 2024-02-14 | 1200.00 |       4800.00 |
+| 2024-04-16 | 1000.00 |       9000.00 |
++------------+---------+---------------+
+5 rows in set (0.01 sec)
+
+Q25. Find all department that have fewer than 2 employees.
+
+mysql> SELECT d.dept_name,
+    ->        COUNT(e.emp_id) AS total_employees
+    -> FROM departments d
+    -> LEFT JOIN employees e
+    -> ON d.dep_id = e.dep_id
+    -> GROUP BY d.dep_id, d.dept_name
+    -> HAVING COUNT(e.emp_id) <= 2;
++-----------+-----------------+
+| dept_name | total_employees |
++-----------+-----------------+
+| HR        |               2 |
+| Marketing |               0 |
++-----------+-----------------+
+2 rows in set (0.00 sec)
+
+Q26.Display the third transection details for each employees based on sale_date(Assume a ranking window function is needed).
+
+(Q.Departments with fewer than 2 employees"
+"Customers with more than 5 orders"
+"Products sold more than 10 times")
+
+Q27. Find employees who have made sales for both 'Electronics' and 'Software' categories.
+
+mysql> with productsRank as (
+    -> select p.category, p.product_name, sum(s.amount) as total_data, rank() over (partition by
+    -> p.category order by sum(s.amount) desc) as r_n from Sales s inner join
+    -> Products p on s.product_id = p.product_id group by p.category,
+    -> p.product_id, p.product_name)
+    -> select category, product_name, total_data from productsRank where r_n = 1;
++-------------+--------------+------------+
+| category    | product_name | total_data |
++-------------+--------------+------------+
+| Electronics | Laptop       |    3600.00 |
+| Software    | saas License |    4000.00 |
++-------------+--------------+------------+
+2 rows in set (0.12 sec)
+
+Q30. Write a query to find duplicate records if there were any in the sales table based on emp_id, product_id, sale_date.
+
+mysql> select emp_id, product_id, sale_date, count(*) as total_rows from sales
+    -> group by emp_id, product_id, sale_date
+    -> having total_rows > 1;
+Empty set (0.01 sec)
+
+Q31. Find the difference between the highest and lowest salary in each department.
+
+SELECT e.dep_id,
+       d.dept_name,
+       MAX(e.salary) AS highest_salary,
+       MIN(e.salary) AS lowest_salary,
+       MAX(e.salary) - MIN(salary) AS salary_difference
+FROM employees e
+join departments d on e.dep_id = d.dep_id 
+GROUP BY e.dep_id;

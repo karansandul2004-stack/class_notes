@@ -1,0 +1,21 @@
+https://www.analystbuilder.com/courses/mysql-for-data-analytics/lesson/instructor-introduction-bLmhX
+
+What is a database?
+-> A database is a collection of data
+Structure: Allows for efficient data storage, retrieval and management
+Types of databases: Includes relational databases (organized in tables) and non-relational databases (for unstructured data)
+
+
+What is a query?
+
+A Query is a request for data from a database, allowing you to perform various operations:
+Operations: includes creating, reading, updating and deleting data (CRUD)
+
+CRUD:- C(Create), R(Read or Select), U(Update), D(Delete).
+
+Relational data store data in rows and in column form like in table form. By using SQL
+
+non-relational data (Not only SQL):- all types of data can be store example in table, chart, graph, document key-value.
+
+
+

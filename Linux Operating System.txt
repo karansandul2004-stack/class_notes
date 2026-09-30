@@ -1,0 +1,14 @@
+Linux Operating System :
+Commands 
+git config --global user.name ""
+git config --global user.email ""
+git config --global --edit
+
+git config --global color.ui auto : Enable helpful color highlight 
+
+ls : List all files and directories
+cd : change directory 
+mkdir : make directory : use to create new folder	
+rmdir : remove directory : use to delete the folder
+rm -rf <folder-name : remove directory forcefully
+touch <file-name> : this will create new file

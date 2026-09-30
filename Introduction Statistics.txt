@@ -1,0 +1,68 @@
+# Statistics
+Statistics is the branch of mathematics that deals with collecting, organizing, analysis, interpreting and 
+
+# Descriptive Stats:
+art of summarising past and present data to uncover patterns, trends, and structure.
+
+It doesn't predict or infer- it simply describes reality as it is, transforming raw data into clear, meaningful insights through measures of centers, spread, and shape.
+
+   OUTLINES
+-> Measure Central Tendency
+-> Measure of Dispersion
+-> Visualization
+
+  MEASURE OF CENTRAL TENDENCY
+->Mean
+->Median
+->Mode
+->Weighted Mean
+->Geometric Mean
+->Harmonic Mean
+
+  MEASURE OF DESPERSION
+->Range
+->Variance
+->Standard Deviation
+->Interquartile Range
+->Mean Absolute Correlation
+
+  Measure of Relationship
+->Covariance
+->Pearson Correlation
+->Slope
+->Spearman Correlation
+
+* Variance => E(X1 - Mean)2/n
+
+
+* Standard Deviation : spread data in same unit
+    Formula => under root (variance)
+
+
+
+* Mean:
+1) Weighted Mean: Use in when Different data 
+  flip -> 4     ==> 10
+  AMazon -> 4.5 ==> 7
+  Myntra -> 3.5 ==> 700
+
+==>4*10+4.5*7+3.5*700/717
+
+2) Geometric Mean : Compound Rate
+ -Stok Price: 1 year
+ -Population
+
+-> value ka quabe root
+
+3) Harmonic Mean : Ratio, Range, Rate (5kg, 50km/h).
+->2*a*b/a+b
+->2*60*40/100==> 48
+
+* Range : Max - Min
+-> 1 to 98==> 98-1==> 97values of data.
+
+* IQR : Interquartile Range
+-> Q3 - Q1 ==> Q2
+
+
+ 

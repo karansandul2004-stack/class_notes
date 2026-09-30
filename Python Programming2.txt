@@ -1,0 +1,59 @@
+Python Programming:
+
+SQL Programming:
+
+Programing:
+Functional Programming:
+Structured Programming:
+Object Programming:
+Procedural Programming:
+Database : Structured Query Language:
+IBM:
+SQL(Structured Query Language) was originally developed by IBM in the early 1970s.
+Is was created by researchers Donald Chamberlin and Raymond Boyce.
+
+PL/SQL: Procedural Language Structure Query Language
+
+T-SQL: Transact Structured Query Language
+
+Relational Database Management System:
+Database: collection of tables: Schema
+A schema is a blueprint or mental framework that organizes information, defining structure and relationships.
+
+Ecommerce:
+login
+registration
+login : product purchase
+
+Table:
+
+Relationship:
+One to One Relationship
+One to Many Relationship
+Many To One Relationship
+Many to Many Relationship
+
+Normalization: Arrangement pf data
+Normalization in DBMS is the process of organizing database tables to reduce data redundancy and improve data
+integrity by structuring data logically, often by splitting large tables into smaller, related ones, to eliminate
+inconsistencies (anomalies) during insert, update, and delete operations, following a set of rules known
+as Normal Forms (like,1NF,2NF, 3NF,BCNF).
+
+First Normal Form: 1NF
+Second Normal Form: 2NF
+Third Normal Form: 3NF
+Boyce Codd Normal Form: BCNF
+
+indexing:
+Indexing in a database is a data structure technique used to speed up data retrieval operations by minimizing
+the number of disk accesses required when a query is run.
+It is similar without reading the entire book.
+
+Employee Table:
+Table:
+Row: Tuple : Record
+In a DBMS(Database Management System), a tuple is a single, complete record or row in table,
+representing one instance of an entity, like one person or one product, with all its associated data values (attributes).
+Column: Field
+In a database, a field is a single, specific category of data (like "Name," "Age," or "Email")that forms a column in a table, defining 
+the type of information stored, while a record (a row) contains the actual data for one entity across all its fields.

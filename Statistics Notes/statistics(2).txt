@@ -1,0 +1,63 @@
+Statistics:
+What is statistics?
+-> Statistics is the branch of mathematics that deals with collection, organizing, analysing, interpreting and presenting data.
+-> It helps us understand and draw conclusions from data in a meaningful way.
+
+->Statistics is the branch of mathematics that deals with the collection, analysis, interpretation and organization of data,
+It is a discipline that is used in many fields,
+including science, medicine, social sciences and business.
+
+Types of Statistics:
+
+Descriptive Statistics:
+
+Measures of Central Tendency:
+Mean:
+Median:
+Mode:
+
+Measure of variability:
+Range:
+Standard Deviation:
+Interquartile Range:
+
+Inferential Statistics:
+
+Data:
+
+Qualitative Data:
+Nominal Data: Labels or categories with no specific order or rank.
+
+Ordinal Data: Categories that have a natural, meaningful order or ranking, but the intervals between them are not
+standardized.
+
+Quantitative Data:
+
+Discreate Data:
+Countable numbers that can only take specific, distinct values(integers).
+
+Continuous Data: Measurable data that can take any value within a given range, including decimals.
+
+Probability:
+Probability is a subject that deals with uncertainty.
+
+Sample : sample group
+
+Population:
+In statistics, a population is the entire group you want to study (e.g., all students in a school), while a sample
+is a smaller subset selected from that group.
+
+Pandas selected from that group.
+
+Pandas Method for Cleaning and Transformation:
+Series : One Dimensional Array
+DataFrame : Two Dimensional Array
+read_csv():
+module : openpyxl
+df.columns :
+
+df.drop() :
+
+df.dropna() : NaN, None, NaT
+
+In pandas, Nat (Not-a-Time) is the specialized marker used to represent missing or null values in datetime or timedelta data types

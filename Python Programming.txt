@@ -1,0 +1,47 @@
+Python Programming:
+
+Data : Raw facts
+
+Data type : 
+A data type is a classification that specifies the kind of value a variable can hold, such as a whole number, a decimal, or a character and defines the operations that can be performed on it.
+
+
+types of data: , 
+integer: class int
+decimal : class float,
+string : class str, 
+Boolean : class bool, 
+
+data Structure:
+list: collection of mutable data
+sort()
+tuple: collection of immutable data
+set: collection of unique data
+Dictionary: collection of key value pair : mutable data structure
+
+Predefined Function:
+dir()
+print()
+
+Collection:
+
+
+Numbers:
+notation which is used to denote physical qualities
+mks:
+meter kilograms second
+fps:
+foot pound second
+cgs:
+centimeter gram second
+
+range(start, stop, step)
+range(10): 0,1,2,3,4,5,6,7,8,9
+Range(1,10,2) : 1,2,3,4,5,6,7,8,9
+range(1,10,2): 1,3,5,7,9
+
+arrange(start, stop, step)
+
+f = format for print
+
+

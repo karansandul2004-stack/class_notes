@@ -1,0 +1,74 @@
+What is Programming?
+set of instructions given to machine which performs some tasks
+
+Types of programming:
+Functional Programming:
+Object Oriented Programming:
+Structured Programming:
+Procedural Programming:
+
+SQL: Structured Query Language: PL/SQL : Procedural Language
+
+Python:
+
+Object Oriented Programming:
+bottom to top approach: paradigm
+
+class: collection of objects : template/blueprint: user defined data structure
+
+Attributes: Object of class: instances of class
+
+Inheritances: Parent and Child Relationship: Super Class =====> Child Class
+
+Encapsulate: Wrapping of data
+
+Access Modifiers:
+public
+protected
+private
+
+Polymorphism: more than one form
+
+Abstraction: hiding of unnecessary properties from user
+
+Python:
+
+ORM: Object Relational Mapper:
+
+Relationship: has a
+
+One to One Relationship
+One to Many Relationship
+Many to One Relationship
+Many to Many Relationship
+
+Normalization:
+Arrangement of data
+
+Table:
+Row: Tuple: Record
+Column : Field
+
+Login:
+Registration:
+
+Relationship Database Management System
+
+Flipkart: Product
+
+excel: 1 million
+csv: comma separate value
+json: Javascript object notation
+txt:
+
+Big Data:
+
+Hadoop:
+Hadoop is an open-source framework for storing and processing massive datasets across clusters of commodity computers
+
+Topology:
+Star Topology
+
+Data Modelling:
+Data modeling is the process of creating visual representations (diagram) and blueprints that define data, its structure, relationships, and rules 
+for structure, storage, and use within a system

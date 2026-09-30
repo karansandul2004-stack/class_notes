@@ -1,0 +1,31 @@
+What is Excel?
+Microsoft Excel is a powerful digital spreadsheet program used to store, organize,
+calculate and analyze data. It is part of the Microsoft Office suite and is available on Windows
+, macOS, IOS, and Android
+
+Two way Grid
+rows : 1,048,576 rows
+columns : 16,384 columns
+
+Column : letters
+Row : Number
+cell : intersection of column and row
+
+worksheet : sheet : collection of all cells
+
+WorkBook : File = All Worksheets
+
+Excel does two things :
+Calculation like Worksheet Formula
+Data Analysis
+Pivot Table
+
+Ribbon : has tabs : tabs has groups have buttons and dropdown enact commands
+
+QAT : Quick Access Toolbar : has button to enact commands
+
+Default Alignment :
+Text is aligned to left
+Number is aligned to right
+logical values: Boolean : True/False : Aligned to center and Capitalized
+Error Message will be centered

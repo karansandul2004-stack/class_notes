@@ -1,0 +1,71 @@
+Statistics :
+
+What is Statistics?
+Branch of mathematics which is used to Analyze, collect or visulize the datasets
+
+Descriptive Statistics:
+art of summarising past and present data to uncover patterns, trends and structure.
+
+Inferential Statistics:
+
+Data : Raw facts : Smallest entity of any information
+
+Qualitative Data : Quality
+Nominal Data:
+[hindu,muslim]
+
+Ordinal Data:
+[disagree, agree]
+[Recommendation  system]
+
+Type of Statistics:
+
+Descriptive Statistis:
+Branch of Statistics:
+Mean:
+Arithmetic Mean:
+Geometric Mean:
+Harmonic Mean:
+Median:
+sorted
+Mode:
+Variance:
+Standard Deviation:
+Correlation:
+
+Inferential Statistics:
+
+Quantitative Data : Quantity
+
+Discrete Data : [20,40,50,60]
+Continuous Data: [Weather, stocks]
+
+Sample: smaller group of population
+
+Population : total value of group
+
+Event : particular occurrence
+
+Sample Bias:
+Mean
+Median
+Mode
+Variance
+Standard Deviation
+
+Pandas:
+Series : One Dimensional 
+DataFrame : Two Dimensional
+
+Mean :
+Arithmetic
+Geometric
+Harmonic
+
+Median:
+
+sorted()
+ascending
+descending
+
+Mode:

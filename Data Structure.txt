@@ -1,0 +1,35 @@
+Data Structure:
+List: collection of data : [] : Mutable data structure
+append: this will add the element at last index
+
+[20,30,40,25,45,"Python"]
+Tuple: Collection of data : immutable data structure: () : (10,20,30)
+Set: collection of unique data : {} : {2,3,4}
+Dictionary: Collection of key value : {key ==> value}
+Key should be unique
+
+Operators:
+Arithmetic Operator: +,-,*,/,%,**,//
+Logical Operator: and or , not
+Biwise operator : &, |, ~
+
+
+Looping
+Iterable
+Iterator
+Iteration
+
+Function and Method:
+
+Predeinfed function:
+print() : to display the data : write something
+
+Function: it can be used by any class
+
+Method : it can be used by any class
+
+Method: it can be used within the class only
+
+module:
+collections:
+deque: doubly ended queue

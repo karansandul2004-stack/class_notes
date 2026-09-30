@@ -1,0 +1,402 @@
+# Statistics Formulas for Data Analysis — Python, SQL, Excel & Power BI Reference
+
+Each formula includes: **Name → Formula → When to use → Why → Where/How (Python, SQL, Excel, Power BI)**
+
+---
+
+## 1. Mean
+
+**Formula:** Mean = Σx / n
+
+**When to use:** Need a single "typical value" summary — average order value, average delivery time.
+
+**Why:** Most common baseline stat; input to variance, z-score, regression.
+
+**Where/How:**
+- **Python:** `df['col'].mean()`
+- **SQL:** `SELECT AVG(col) FROM table;`
+- **Excel:** `=AVERAGE(range)`
+- **Power BI (DAX):** `Average Sales = AVERAGE(Table[Sales])`
+
+---
+
+## 2. Median
+
+**Formula:** Middle value of sorted data
+
+**When to use:** Data has outliers or skew (salaries, house prices, customer spend).
+
+**Why:** Resistant to extreme values; better "typical value" than mean when skewed.
+
+**Where/How:**
+- **Python:** `df['col'].median()`
+- **SQL:** `SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY col) FROM table;` (Postgres/SQL Server); MySQL has no native function — needs a workaround query.
+- **Excel:** `=MEDIAN(range)`
+- **Power BI (DAX):** `Median Sales = MEDIAN(Table[Sales])`
+
+---
+
+## 3. Mode
+
+**Formula:** Most frequently occurring value
+
+**When to use:** Categorical data — most common product bought, most common complaint type.
+
+**Why:** Only central-tendency measure usable on non-numeric data.
+
+**Where/How:**
+- **Python:** `df['col'].mode()`
+- **SQL:** `SELECT col, COUNT(*) FROM table GROUP BY col ORDER BY COUNT(*) DESC LIMIT 1;`
+- **Excel:** `=MODE.SNGL(range)`
+- **Power BI (DAX):** No direct function — build via a measure using `TOPN` on a grouped table, or use a visual-level "Top N" filter.
+
+---
+
+## 4. Range
+
+**Formula:** Range = Max − Min
+
+**When to use:** Quick first-look spread check during initial EDA.
+
+**Why:** Fast but very sensitive to outliers — use only as a rough first pass.
+
+**Where/How:**
+- **Python:** `df['col'].max() - df['col'].min()`
+- **SQL:** `SELECT MAX(col) - MIN(col) FROM table;`
+- **Excel:** `=MAX(range)-MIN(range)`
+- **Power BI (DAX):** `Range = MAX(Table[Sales]) - MIN(Table[Sales])`
+
+---
+
+## 5. Variance & Standard Deviation
+
+**Formula:**
+Variance = Σ(x − mean)² / n (or n−1 for sample)
+SD = √Variance
+
+**When to use:** Measuring consistency/spread — delivery time reliability, sales volatility.
+
+**Why:** Low SD = consistent/predictable; high SD = variable/risky. Foundation for z-scores and most tests.
+
+**Where/How:**
+- **Python:** `df['col'].var()`, `df['col'].std()`
+- **SQL:** `SELECT VAR_SAMP(col), STDDEV_SAMP(col) FROM table;` (Postgres/MySQL); `VAR()`/`STDEV()` in SQL Server
+- **Excel:** `=VAR.S(range)` / `=STDEV.S(range)` for sample; `=VAR.P(range)` / `=STDEV.P(range)` for population
+- **Power BI (DAX):** `SD Sales = STDEV.S(Table[Sales])`
+
+---
+
+## 6. Coefficient of Variation (CV)
+
+**Formula:** CV = (SD / Mean) × 100
+
+**When to use:** Comparing variability across datasets with different units/scales.
+
+**Why:** Normalizes SD so comparisons are meaningful regardless of scale.
+
+**Where/How:**
+- **Python:** `(df['col'].std() / df['col'].mean()) * 100`
+- **SQL:** `SELECT (STDDEV_SAMP(col) / AVG(col)) * 100 FROM table;`
+- **Excel:** `=(STDEV.S(range)/AVERAGE(range))*100`
+- **Power BI (DAX):** `CV = DIVIDE(STDEV.S(Table[Sales]), AVERAGE(Table[Sales])) * 100`
+
+---
+
+## 7. Percentiles & IQR (Outlier Detection)
+
+**Formula:**
+IQR = Q3 − Q1
+Lower fence = Q1 − 1.5×IQR
+Upper fence = Q3 + 1.5×IQR
+
+**When to use:** Setting a defensible rule to flag outliers before cleaning data or modeling.
+
+**Why:** Backbone of boxplots; standard, non-arbitrary outlier detection method.
+
+**Where/How:**
+- **Python:** `q1, q3 = df['col'].quantile([0.25, 0.75])`; `iqr = q3 - q1`
+- **SQL:** `PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY col)` and `PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY col)` (Postgres/SQL Server)
+- **Excel:** `=QUARTILE.INC(range,1)` and `=QUARTILE.INC(range,3)`
+- **Power BI (DAX):** `Q1 = PERCENTILE.INC(Table[Sales], 0.25)`; use a boxplot-style visual for display.
+
+---
+
+## 8. Z-score
+
+**Formula:** z = (x − μ) / σ
+
+**When to use:** Standardizing values to compare across scales; flagging anomalies (|z| > 3 often flagged).
+
+**Why:** Converts raw values into a universal "how unusual is this" unit.
+
+**Where/How:**
+- **Python:** `(x - df['col'].mean()) / df['col'].std()` or `scipy.stats.zscore(df['col'])`
+- **SQL:** `SELECT (col - AVG(col) OVER()) / STDDEV_SAMP(col) OVER() FROM table;`
+- **Excel:** `=STANDARDIZE(x, mean, standard_dev)`
+- **Power BI (DAX):** `Z-Score = DIVIDE(Table[Value] - AVERAGE(Table[Value]), STDEV.S(Table[Value]))`
+
+---
+
+## 9. Classical & Conditional Probability
+
+**Formula:**
+P(A) = Favorable outcomes / Total outcomes
+P(A|B) = P(A∩B) / P(B)
+
+**When to use:** "Given that a customer did X, what's the chance they'll do Y?" — cross-sell/targeting analysis.
+
+**Why:** Refines a blind average probability using known related context.
+
+**Where/How:**
+- **Python:** Calculate via `pandas` groupby counts: `len(df[(df.A==1)&(df.B==1)]) / len(df[df.B==1])`
+- **SQL:** `SELECT COUNT(*) FILTER (WHERE A=1 AND B=1) * 1.0 / COUNT(*) FILTER (WHERE B=1) FROM table;` (or `CASE WHEN` in databases without `FILTER`)
+- **Excel:** `=COUNTIFS(rangeA,1,rangeB,1) / COUNTIF(rangeB,1)`
+- **Power BI (DAX):** `P(A|B) = DIVIDE(CALCULATE(COUNTROWS(Table), Table[A]=1, Table[B]=1), CALCULATE(COUNTROWS(Table), Table[B]=1))`
+
+---
+
+## 10. Bayes' Theorem
+
+**Formula:** P(A|B) = [P(B|A) × P(A)] / P(B)
+
+**When to use:** Updating a probability (e.g., churn risk) as new evidence comes in.
+
+**Why:** Combines a base rate with new data for a more accurate, revised probability — core to predictive scoring.
+
+**Where/How:**
+- **Python:** Manual calculation using computed probabilities, or `pgmpy`/`scipy` for more complex Bayesian models.
+- **SQL:** Not a built-in function — compute component probabilities (P(A), P(B), P(B|A)) via separate aggregate queries, then combine in application code or a final calculated query.
+- **Excel:** Manual formula combining cells holding each probability, e.g. `=(P_B_given_A*P_A)/P_B`
+- **Power BI (DAX):** Build as a measure combining three underlying probability measures with `DIVIDE()`.
+
+---
+
+## 11. Binomial Distribution
+
+**Formula:** P(X=k) = C(n,k) × p^k × (1−p)^(n−k)
+
+**When to use:** Fixed number of independent trials, same success probability each time — e.g., probability exactly 3 of 10 emails convert.
+
+**Why:** Estimates probability of a specific number of successes; useful for campaign planning.
+
+**Where/How:**
+- **Python:** `scipy.stats.binom.pmf(k, n, p)`
+- **SQL:** Not natively available — typically computed in Python/R and stored, or approximated using window functions for large-scale simulation.
+- **Excel:** `=BINOM.DIST(k, n, p, FALSE)`
+- **Power BI (DAX):** No native binomial function — precompute in Power Query (Python/R script) or import from a source table.
+
+---
+
+## 12. Poisson Distribution
+
+**Formula:** P(X=k) = [e^(−λ) × λ^k] / k!
+
+**When to use:** Modeling counts of rare/random events over a fixed interval — support tickets/day, defects/batch.
+
+**Why:** Estimates the probability of an unusual count occurring; helps staffing/capacity planning.
+
+**Where/How:**
+- **Python:** `scipy.stats.poisson.pmf(k, lam)`
+- **SQL:** Not native — calculate λ (average rate) via `AVG()`, then compute probability in application layer or Python.
+- **Excel:** `=POISSON.DIST(k, mean, FALSE)`
+- **Power BI (DAX):** No native function — use Power Query's Python/R integration to precompute, or import from an external calculation.
+
+---
+
+## 13. Normal Distribution
+
+**Concept:** Bell-shaped, symmetric distribution; mean = median = mode; basis for most inferential tests.
+
+**When to use:** Checking whether data is roughly normal before applying tests that assume normality.
+
+**Why:** Confirms whether z-tests, t-tests, and confidence intervals are appropriate.
+
+**Where/How:**
+- **Python:** `scipy.stats.shapiro(df['col'])` (normality test); `matplotlib`/`seaborn` histogram or Q-Q plot for visual check
+- **SQL:** Not testable directly in SQL — extract data and test in Python/Excel.
+- **Excel:** `=NORM.DIST(x, mean, standard_dev, TRUE)`; histogram chart for visual check
+- **Power BI (DAX):** No built-in normality test — visualize distribution with a histogram visual; deeper testing done in Python/R via Power BI's script integration.
+
+---
+
+## 14. Central Limit Theorem (CLT)
+
+**Concept:** Sampling distribution of the sample mean becomes approximately normal as sample size grows, regardless of original data shape.
+
+**When to use:** Justifying t-tests/confidence intervals on sample means even when raw data is skewed.
+
+**Why:** Theoretical backbone that makes inferential statistics valid on real-world (non-normal) data.
+
+**Where/How:**
+- **Python:** Demonstrate via repeated sampling: `[df['col'].sample(50).mean() for _ in range(1000)]`, then plot the resulting distribution.
+- **SQL:** Not directly applicable — CLT is a statistical concept validated through repeated sampling done in Python/R, not a query operation.
+- **Excel:** Can simulate with repeated `=AVERAGE()` on random samples (using `RAND()`-based sampling) and plot the results.
+- **Power BI:** Conceptual justification only — not something computed in Power BI directly; relevant when deciding whether to trust averages shown in visuals.
+
+---
+
+## 15. Hypothesis Testing & p-value
+
+**Formula:**
+H₀: no effect/difference; Hₐ: effect/difference exists
+Decision rule: p < 0.05 → reject H₀
+
+**When to use:** Any "did the change actually work" question — A/B tests, before/after comparisons.
+
+**Why:** Converts a test statistic into a clear statistical decision.
+
+**Where/How:**
+- **Python:** `scipy.stats.ttest_ind()`, `ttest_rel()`, `ttest_1samp()` all return a p-value directly.
+- **SQL:** Not computable natively — SQL aggregates the data (means, counts, group sizes); the actual test is run in Python/R/Excel.
+- **Excel:** `=T.TEST(range1, range2, tails, type)` returns the p-value directly.
+- **Power BI:** No native hypothesis testing — use Power BI's Python/R script visual to run `scipy`/R tests and display results.
+
+---
+
+## 16. Type I & Type II Errors
+
+**Concept:** Type I = false positive (rejecting a true H₀); Type II = false negative (failing to reject a false H₀).
+
+**When to use:** Evaluating risk when interpreting any test result — wrongly concluding a campaign worked vs. missing a real effect.
+
+**Why:** Helps weigh the cost of being wrong in either direction when setting significance thresholds.
+
+**Where/How:**
+- **Python:** Not a formula to compute directly — considered when choosing significance level (alpha) and interpreting `scipy.stats` test results.
+- **SQL:** Not applicable — this is an interpretive/statistical design concept, not a query.
+- **Excel:** Not applicable directly — relevant when interpreting `T.TEST`/`CHISQ.TEST` results.
+- **Power BI:** Not applicable directly — relevant when interpreting results from a Python/R script visual.
+
+---
+
+## 17. One-sample, Two-sample & Paired t-tests
+
+**Concept:**
+- One-sample: compare 1 sample mean to a known/reference value
+- Two-sample: compare means of 2 independent groups
+- Paired: compare the same subjects measured twice (before/after)
+
+**When to use:** Comparing an average against a target, comparing two groups, or comparing before/after results.
+
+**Why:** Determines if an observed difference is statistically real or due to random variation.
+
+**Where/How:**
+- **Python:** `scipy.stats.ttest_1samp()`, `ttest_ind()`, `ttest_rel()`
+- **SQL:** Not native — aggregate the raw data with SQL, then run the test in Python/Excel/R.
+- **Excel:** `=T.TEST(range1, range2, tails, type)` — type 1 = paired, type 2 = two-sample equal variance, type 3 = two-sample unequal variance
+- **Power BI:** Use a Python/R script visual to call `scipy.stats` and return the result into the report.
+
+---
+
+## 18. Chi-Square Test
+
+**Formula (concept):** χ² = Σ [(Observed − Expected)² / Expected]
+
+**When to use:** Testing whether two categorical variables are independent — region vs. churn, gender vs. product preference.
+
+**Why:** T-tests need numeric data; chi-square is the equivalent for categorical/count data via a contingency table.
+
+**Where/How:**
+- **Python:** `scipy.stats.chi2_contingency(pd.crosstab(df['A'], df['B']))`
+- **SQL:** Build the contingency table with `GROUP BY`/`PIVOT`, then run the actual test in Python/Excel (SQL alone can't compute the test statistic).
+- **Excel:** `=CHISQ.TEST(actual_range, expected_range)`
+- **Power BI:** Build the contingency table with a Matrix visual; run the actual chi-square test via a Python/R script visual.
+
+---
+
+## 19. ANOVA (Analysis of Variance)
+
+**Formula:** F = Between-group variance / Within-group variance
+
+**When to use:** Comparing means across 3+ groups — purchase value across multiple age brackets or store locations.
+
+**Why:** Avoids inflated false-positive risk from running many separate t-tests.
+
+**Where/How:**
+- **Python:** `scipy.stats.f_oneway(group1, group2, group3)`
+- **SQL:** Compute group means/variances with `GROUP BY` and aggregate functions, but the F-test itself is run in Python/Excel.
+- **Excel:** Data Analysis Toolpak → "Anova: Single Factor"
+- **Power BI:** No native ANOVA — run via a Python/R script visual.
+
+---
+
+## 20. Pearson & Spearman Correlation
+
+**Concept:** Pearson measures linear relationship strength (−1 to +1); Spearman measures monotonic relationship via ranks.
+
+**When to use:** Checking if two numeric variables move together — ad spend vs. sales (Pearson); ranked/ordinal or non-linear data (Spearman).
+
+**Why:** Quantifies relationship strength before modeling. Remember: correlation ≠ causation.
+
+**Where/How:**
+- **Python:** `df['A'].corr(df['B'])` (Pearson, default); `df['A'].corr(df['B'], method='spearman')`
+- **SQL:** `SELECT CORR(colA, colB) FROM table;` (Postgres has native `CORR()`; MySQL/SQL Server need manual calculation)
+- **Excel:** `=CORREL(rangeA, rangeB)` (Pearson); Spearman requires ranking data first with `=RANK.AVG()` then applying `CORREL`
+- **Power BI (DAX):** No native correlation function — build using `AVERAGEX`/`SUMX` formulas, or use the built-in "Key Influencers" or scatter chart visual for a quick view.
+
+---
+
+## 21. Simple Linear Regression
+
+**Formula:** Y = β₀ + β₁X
+
+**When to use:** Predicting one numeric outcome from one predictor — sales from advertising spend.
+
+**Why:** β₁ tells you the expected change in Y per one-unit increase in X — turns a relationship into an actionable prediction.
+
+**Where/How:**
+- **Python:** `sklearn.linear_model.LinearRegression().fit(X, y)` or `statsmodels.OLS`
+- **SQL:** Not native — some databases (e.g., BigQuery ML, Postgres with extensions) support `CREATE MODEL`/regression functions, but standard SQL cannot fit a regression.
+- **Excel:** `=SLOPE(known_y, known_x)` and `=INTERCEPT(known_y, known_x)`, or Data Analysis Toolpak → "Regression"
+- **Power BI:** Built-in trend line on a scatter chart visual (right-click → Add trend line), or a Python/R script visual for full regression output.
+
+---
+
+## 22. Multiple Linear Regression
+
+**Formula:** Y = β₀ + β₁X₁ + β₂X₂ + ... + ε
+
+**When to use:** Predicting an outcome influenced by several factors at once — spending from age, income, and region together.
+
+**Why:** Isolates each variable's effect while controlling for the others.
+
+**Where/How:**
+- **Python:** `sklearn.linear_model.LinearRegression().fit(X_multiple, y)` or `statsmodels.OLS` with multiple predictors
+- **SQL:** Not native in standard SQL — requires ML extensions (BigQuery ML, Postgres ML) or exporting data to Python/R.
+- **Excel:** Data Analysis Toolpak → "Regression" with multiple X columns selected
+- **Power BI:** Run via a Python/R script visual (standard DAX cannot fit multi-variable regression models).
+
+---
+
+## 23. R-squared (R²)
+
+**Concept:** Proportion of variance in the outcome explained by the model (0 to 1).
+
+**When to use:** Evaluating how well a regression model fits the data.
+
+**Why:** Tells you how much to trust the model's fit — but doesn't confirm accuracy on new data or causation.
+
+**Where/How:**
+- **Python:** `model.score(X, y)` (scikit-learn) or `.rsquared` attribute from `statsmodels`
+- **SQL:** Not computable directly — comes from the regression model output built in Python/Excel.
+- **Excel:** Returned automatically in the Data Analysis Toolpak regression output summary; `=RSQ(known_y, known_x)` for simple regression
+- **Power BI:** Shown automatically when using a Python/R script visual for regression; not available as a native DAX measure.
+
+---
+
+## Quick Tool-Fit Summary
+
+| Task | Best Tool Fit |
+|---|---|
+| Descriptive stats (mean, median, SD, IQR) | All four — Excel/Power BI for quick dashboards, Python/SQL for larger datasets |
+| Probability & Bayes calculations | Python (flexible) or Excel (simple cases) |
+| Distributions (Binomial, Poisson, Normal checks) | Python (native support) or Excel (built-in functions) |
+| Hypothesis tests (t-test, chi-square, ANOVA) | Python (`scipy.stats`) or Excel (Data Analysis Toolpak) — Power BI only via script visuals |
+| Correlation | Python/Excel/SQL (Postgres) directly; Power BI via visuals or scripts |
+| Regression (simple & multiple) | Python (`sklearn`/`statsmodels`) for full control; Excel for quick single/multi regression; Power BI via script visual or trend line |
+| Reporting/dashboarding of any result | Power BI (visual layer) — but the underlying stat is usually computed in Python/Excel/SQL first |
+
+**General rule of thumb:** SQL is best for aggregating and preparing the raw data (sums, counts, group-bys); Python is best for actually running statistical tests, probability calculations, and regression models; Excel is good for quick, one-off calculations without writing code; Power BI is best for visualizing and reporting results, not for computing the underlying statistics itself.
+
+---
+*Reference scoped to statistics topics directly relevant to data analysis, with usage guidance across Python, SQL, Excel, and Power BI.*

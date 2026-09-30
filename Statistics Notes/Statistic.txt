@@ -1,0 +1,57 @@
+Statistics
+
+Statistics is the branch of mathematics that deals with collecting, organizing, analysing and presenting data.
+
+
+Descriptive Statistics
+
+Descriptive Statistics is the art of summarising past and present data to uncover patterns, trends and structure.
+It doesn't predict or infer-it simply describes reality as it is, transforming raw data into clear, meaningful insights though
+measures of center, spread and shape.
+
+Outlines
+Measure Central Tendency
+Measure of Dispersion
+Measure of Relationships
+Visualizations
+
+Measure of central Tendency
+
+Mean:- mean represent a central value calculated by dividing the store 
+Median:- it is the middle value that represents the central tendency while outliers in the data
+Mode:- 
+Weighted Mean
+Geometric Mean
+Harmonic Mean
+
+Measure of Dispersion
+Range
+Variance
+Standard Deviation
+Interquartile Range 
+Mean Absolute Deviation
+
+Measure of Relationship
+
+Covariance
+Pearson Correlation
+Slope
+Spearman Correlation
+
+Graphs in Descriptive Statistics
+Bar Chart
+Histogram
+Pie Chart
+Line Chart
+Box Plot (Box-and-Whisker Plot)
+Frequency Polygon
+Scatter Plot
+
+Quantitative (Numerical)- int, float
+1: Continuous - height, width, stock price, temperature
+2: Descrete - number of student, car price, mobile price
+
+Qualitative(Categorical)- str, object, categorical
+1: Nominal - gender, city, names
+2: Ordinal - rank, rating, classes, grades
+
