@@ -1,0 +1,77 @@
+1. Give some examples of common SQL commands of each type.
+
+DDL: CREATE, ALTER TABLE, DROP, TRUNCATE, and ADD COLUMN
+DML: UPDATE, DELETE, and INSERT
+DCL: GRANT and REVOKE
+TCL: COMMIT, SET TRANSACTION, ROLLBACK, and SAVEPOINT
+DQL: SELECT
+
+2. What types of SQL subqueries do you know?
+Single-row – returns at most one row.
+Multi-row – returns at least two rows.
+Multi-column – returns at least two columns.
+Correlated – a subquery related to the information from the outer query.
+Nested – a subquery inside another subquery.
+
+3: What is a constraint, and why use constraints?
+
+4. What SQL constraints do you know?
+DEFAULT – provides a default value for a column.
+UNIQUE – allows only unique values.
+NOT NULL – allows only non-null values.
+PRIMARY KEY – allows only unique and strictly non-null values (NOT NULL and UNIQUE).
+FOREIGN KEY – provides shared keys between two and more tables.
+
+5. What is a schema?
+
+6. What is ER-Diagram
+
+7. What is a SQL comment?
+A human-readable clarification on what a particular piece of code does. SQL code comments can be single-line (preceded by a double dash --) or span over multiple lines (as follows: /*comment_text*/). When the SQL engine runs, it ignores code comments. The purpose of adding SQL code comments is to make the code more comprehensive for those people who will read it in the future.
+
+8. What types of SQL operators do you know?
+Arithmetic (+, -, *, /, etc.)
+Comparison (>, <, =, >=, etc.)
+Compound (+=, -=, *=, /=, etc.)
+Logical (AND, OR, NOT, BETWEEN, etc.)
+String (%, _, +, ^, etc.)
+Set (UNION, UNION ALL, INTERSECT, and MINUS (or EXCEPT))
+
+9. What is a clause?
+A condition imposed on a SQL query to filter the data to obtain the desired result. Some examples are WHERE, LIMIT, HAVING, LIKE, AND, OR, ORDER BY, etc.
+
+10. Query Execution Order:
+FROM / JOIN	
+WHERE	
+GROUP BY
+HAVING
+SELECT	
+DISTINCT	
+ORDER BY	
+LIMIT / OFFSET
+
+11. What is normalization in SQL, and why use it?
+Normalization is a process of database design that includes organizing and restructuring data in a way to reduce data redundancy, dependency, duplication, and inconsistency. This leads to enhanced data integrity, more tables within the database, more efficient data access and security control, and greater query flexibility.
+
+12. Difference between-
+ 	1: DELETE and TRUNCATE statements?
+	2: DROP and TRUNCATE statements?
+	3: HAVING and WHERE statements?
+	4: Group by and Order by
+	5: SQL and MySQL
+
+13: What are ACID properties in DBMS.
+
+14: What is Joins ? Types of joins ?
+
+15: What is Self join ?
+
+16: What are window functions ?
+
+17: What is subquery and its importance?
+
+18: What is a stored procedure? How is it different from a function?
+
+19: What are triggers in SQL? When are they used?
+
+20: What is SQL and No SQL database?
