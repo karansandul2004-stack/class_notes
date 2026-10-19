@@ -1,0 +1,1082 @@
+1. Give some examples of common SQL commands of each type.
+
+DDL:(Data Definition Language) CREATE, ALTER TABLE, DROP, TRUNCATE, and ADD COLUMN
+
+CREATE TABLE employees (
+    employee_id INT,
+    name VARCHAR(100),
+    salary DECIMAL(10,2)
+);
+
+ALTER TABLE employees ADD COLUMN department VARCHAR(50);
+
+ALTER TABLE employees MODIFY salary DECIMAL(12,2);
+
+DROP TABLE employees;
+
+TRUNCATE TABLE employees;
+
+
+DML:(Data Manipulation Language) UPDATE, DELETE, and INSERT
+
+INSERT INTO employees
+(employee_id, name, salary, department)
+VALUES
+(1, 'John', 50000, 'IT');
+
+UPDATE employees
+SET salary = 60000
+WHERE employee_id = 1;
+
+DELETE FROM employees
+WHERE employee_id = 1;
+
+DCL:(Data Control Language) GRANT and REVOKE
+
+GRANT SELECT ON employees TO analyst;
+
+REVOKE SELECT ON employees FROM analyst;
+
+TCL:(Transaction Control Language) COMMIT, SET TRANSACTION, ROLLBACK, and SAVEPOINT
+
+START TRANSACTION;
+
+UPDATE employees
+SET salary = 60000
+WHERE employee_id = 1;
+
+SAVEPOINT salary_update;
+
+ROLLBACK TO salary_update;
+
+COMMIT;
+
+DQL: SELECT
+
+SELECT *
+FROM employees;
+
+2. What types of SQL subqueries do you know?
+A subquery is a query written inside another SQL query.
+
+Single-row – returns at most one row.
+SELECT *
+FROM employees
+WHERE salary = (
+    SELECT MAX(salary)
+    FROM employees
+);
+
+Multi-row – returns at least two rows.
+SELECT *
+FROM employees
+WHERE department_id IN (
+    SELECT department_id
+    FROM departments
+    WHERE location = 'Delhi'
+);
+
+Multi-column – returns at least two columns.
+SELECT *
+FROM employees
+WHERE (department_id, salary) IN (
+    SELECT department_id, MAX(salary)
+    FROM employees
+    GROUP BY department_id
+);
+
+Correlated – a subquery related to the information from the outer query.
+SELECT e1.*
+FROM employees e1
+WHERE salary > (
+    SELECT AVG(e2.salary)
+    FROM employees e2
+    WHERE e2.department_id = e1.department_id
+);
+
+Nested – a subquery inside another subquery.
+SELECT *
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees
+    WHERE department_id IN (
+        SELECT department_id
+        FROM departments
+        WHERE location = 'Delhi'
+    )
+);
+
+"The common types of subqueries are single-row, multi-row, multi-column, correlated, and nested subqueries."
+
+3: What is a constraint, and why use constraints?
+A constraint is a rule applied to a column or table to control what type of data can be stored.
+
+Constraints help maintain:
+Data accuracy
+Data integrity
+Data consistency
+Valid relationships between tables
+
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    salary DECIMAL(10,2) DEFAULT 30000
+);
+
+Here:
+PRIMARY KEY → unique employee
+NOT NULL → name cannot be missing
+UNIQUE → duplicate emails are prevented
+DEFAULT → salary gets a default value if none is supplied
+
+Interview answer
+
+"Constraints are rules applied to database columns to maintain data integrity, accuracy, and consistency."
+
+4. What SQL constraints do you know?
+DEFAULT – provides a default value for a column.(Provides a default value.)
+
+status VARCHAR(20) DEFAULT 'Active'
+
+UNIQUE – allows only unique values.(Prevents duplicate values.)
+
+email VARCHAR(100) UNIQUE
+
+NOT NULL – allows only non-null values.(Prevents NULL values.)
+
+name VARCHAR(100) NOT NULL
+
+PRIMARY KEY – allows only unique and strictly non-null values (NOT NULL and UNIQUE).
+
+employee_id INT PRIMARY KEY
+A primary key must be:
+
+Unique
+Not NULL
+
+FOREIGN KEY – provides shared keys between two and more tables.(Creates a relationship between tables.)
+
+FOREIGN KEY (department_id)
+REFERENCES departments(department_id)
+
+Check - (Restricts values according to a condition.)
+
+salary DECIMAL(10,2) CHECK (salary > 0)
+
+Interview answer
+
+"The major SQL constraints are PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL, DEFAULT, and CHECK."
+
+5. What is a schema?
+
+A schema is the logical structure or organization of a database.
+
+It can contain:
+
+Tables
+Views
+Procedures
+Functions
+Constraints
+Relationships
+
+For example:
+Company Database
+│
+├── employees
+├── departments
+├── salaries
+└── attendance
+
+Interview answer
+
+"A schema defines the structure and organization of database objects such as tables, views, procedures, and relationships."
+
+6. What is ER-Diagram
+
+ER Diagram = Entity Relationship Diagram
+
+It is a visual representation of:
+
+Entities
+Attributes
+Relationships
+Example:
+DEPARTMENT
+department_id
+department_name
+       │
+       │ 1 : Many
+       ↓
+EMPLOYEE
+employee_id
+name
+salary
+department_id
+
+Here:
+Department = entity
+department_id = attribute
+Department → Employee = relationship
+Interview answer
+
+"An ER diagram is a visual representation of entities, their attributes, and the relationships between them. It is commonly used during database design."
+
+7. What is a SQL comment?
+A human-readable clarification on what a particular piece of code does. SQL code comments can be single-line (preceded by a double dash --) or span over multiple lines (as follows: /*comment_text*/). When the SQL engine runs, it ignores code comments. The purpose of adding SQL code comments is to make the code more comprehensive for those people who will read it in the future.
+
+A SQL comment is text written to explain SQL code. The database engine ignores it during execution.
+
+Single-line comment
+-- This query retrieves all employees
+SELECT *
+FROM employees;
+
+Multi-line comment
+/*
+This query calculates
+the average employee salary
+*/
+SELECT AVG(salary)
+FROM employees;
+Interview answer
+
+"SQL comments are used to explain or document SQL code. Single-line comments use --, while multi-line comments use /* */."
+
+8. What types of SQL operators do you know?
+Arithmetic (+, -, *, /, etc.)
+
+SELECT salary * 12 AS annual_salary
+FROM employees;
+
+Comparison (>, <, =, >=, etc.)
+
+SELECT *
+FROM employees
+WHERE salary > 50000;
+
+Compound (+=, -=, *=, /=, etc.)
+Logical (AND, OR, NOT, BETWEEN, etc.)
+
+SELECT *
+FROM employees
+WHERE department = 'IT'
+AND salary > 50000;
+
+String (%, _, +, ^, etc.)
+Set (UNION, UNION ALL, INTERSECT, and MINUS (or EXCEPT))
+Special operators(BETWEEN,IN,LIKE,IS NULL,IS NOT NULL,EXISTS)
+
+SELECT *
+FROM employees
+WHERE salary BETWEEN 40000 AND 60000;
+
+9. What is a clause?
+A condition imposed on a SQL query to filter the data to obtain the desired result. Some examples are WHERE, LIMIT, HAVING, LIKE, AND, OR, ORDER BY, etc.
+
+SELECT department, AVG(salary)
+FROM employees
+WHERE salary > 30000
+GROUP BY department
+HAVING AVG(salary) > 50000
+ORDER BY AVG(salary) DESC
+LIMIT 5;
+
+Important clauses include:
+SELECT
+FROM
+WHERE
+GROUP BY
+HAVING
+ORDER BY
+LIMIT
+Important correction
+
+AND, OR, and LIKE are operators/predicates, not generally called SQL clauses.
+
+Interview answer
+
+"A clause is a component of an SQL statement used to perform a specific operation, such as filtering, grouping, sorting, or limiting results."
+
+10. Query Execution Order:
+FROM 
+JOIN / ON	
+WHERE	
+GROUP BY
+HAVING
+SELECT	
+DISTINCT	
+ORDER BY	
+LIMIT / OFFSET
+
+SELECT department, AVG(salary)
+FROM employees
+WHERE salary > 30000
+GROUP BY department
+HAVING AVG(salary) > 50000
+ORDER BY AVG(salary) DESC
+LIMIT 5;
+
+11. What is normalization in SQL, and why use it?
+Normalization is a process of database design that includes organizing and restructuring data in a way to reduce data redundancy, dependency, duplication, and inconsistency. This leads to enhanced data integrity, more tables within the database, more efficient data access and security control, and greater query flexibility.
+
+Normalization is the process of organizing database data to reduce unnecessary duplication and improve data integrity.
+
+For example, instead of:
+
+Order
+---------------------------------
+OrderID | Customer | City | Product
+1       | Rahul    | Delhi| Laptop
+2       | Rahul    | Delhi| Mouse
+3       | Rahul    | Delhi| Keyboard
+
+we can separate customers and orders:
+
+CUSTOMERS
+CustomerID | Customer | City
+
+ORDERS
+OrderID | CustomerID | Product
+
+Benefits:
+
+Reduces data redundancy
+Improves data consistency
+Prevents update anomalies
+Improves data integrity
+Makes relationships clearer
+Normal forms
+
+Common normal forms include:
+
+1NF
+2NF
+3NF
+BCNF
+Interview answer
+
+"Normalization is the process of organizing data into related tables to reduce redundancy and improve data integrity and consistency."
+
+12. Difference between-
+ 	1: DELETE and TRUNCATE statements?
+| DELETE                        | TRUNCATE                               |
+| ----------------------------- | -------------------------------------- |
+| DML                           | Usually classified as DDL              |
+| Can delete selected rows      | Removes all rows                       |
+| Can use `WHERE`               | Cannot use `WHERE`                     |
+| Row-level deletion            | Removes all table rows                 |
+| Generally slower for all rows | Generally faster for removing all rows |
+| Table structure remains       | Table structure remains                |
+Example:
+
+DELETE FROM employees
+WHERE employee_id = 10;
+
+TRUNCATE:
+
+TRUNCATE TABLE employees;
+Interview answer
+
+"DELETE can remove specific rows using WHERE, while TRUNCATE removes all rows from a table while keeping its structure."
+
+	2: DROP and TRUNCATE statements?
+| DROP                                  | TRUNCATE                           |
+| ------------------------------------- | ---------------------------------- |
+| Removes table                         | Removes rows                       |
+| Table structure is removed            | Table structure remains            |
+| Table no longer exists                | Table still exists                 |
+| Cannot query the dropped table        | Can continue using table           |
+| Used when table is no longer required | Used when data needs to be removed |
+DROP TABLE employees;
+
+vs
+
+TRUNCATE TABLE employees;
+	3: HAVING and WHERE statements?
+| WHERE                                         | HAVING                        |
+| --------------------------------------------- | ----------------------------- |
+| Filters rows                                  | Filters groups                |
+| Applied before grouping                       | Applied after grouping        |
+| Normally cannot use aggregate result directly | Commonly used with aggregates |
+
+SELECT department, AVG(salary)
+FROM employees
+WHERE salary > 30000
+GROUP BY department
+HAVING AVG(salary) > 50000;
+
+Here:
+WHERE → filters individual employees
+HAVING → filters departments/groups
+
+	4: Group by and Order by
+GROUP BY
+
+Used to create groups.
+
+SELECT department, COUNT(*)
+FROM employees
+GROUP BY department;
+ORDER BY
+
+Used to sort results.
+
+SELECT *
+FROM employees
+ORDER BY salary DESC;
+Interview answer
+
+"GROUP BY groups rows for aggregation, while ORDER BY sorts the final result."
+
+	5: SQL and MySQL
+SQL
+
+SQL = Structured Query Language
+
+It is a language used to interact with relational databases.
+
+MySQL
+
+MySQL is a relational database management system (RDBMS) that uses SQL.
+
+Think:
+
+SQL = Language
+MySQL = Database Management System
+
+Similar RDBMS examples:
+
+MySQL
+PostgreSQL
+SQL Server
+Oracle Database
+Interview answer
+
+"SQL is the language used to communicate with relational databases, while MySQL is an RDBMS that uses SQL."
+
+13: What are ACID properties in DBMS.
+
+ACID describes important properties of reliable database transactions.
+
+A — Atomicity
+
+A transaction is completed entirely or not at all.
+
+Transaction
+   ↓
+Success → COMMIT
+Failure → ROLLBACK
+C — Consistency
+
+The database moves from one valid state to another valid state.
+
+I — Isolation
+
+Transactions should not improperly interfere with each other.
+
+D — Durability
+
+Once committed, changes remain saved even after a system failure.
+
+Interview answer
+
+"ACID stands for Atomicity, Consistency, Isolation, and Durability. These properties help ensure reliable and consistent transaction processing."
+
+14: What is Joins ? Types of joins ?
+
+A JOIN combines rows from two or more tables using a related column.
+
+Example:
+
+SELECT e.name, d.department_name
+FROM employees e
+JOIN departments d
+    ON e.department_id = d.department_id;
+Main types
+INNER JOIN
+
+Returns matching records from both tables.
+
+SELECT *
+FROM employees e
+INNER JOIN departments d
+ON e.department_id = d.department_id;
+LEFT JOIN
+
+Returns all records from the left table and matching records from the right.
+
+SELECT *
+FROM employees e
+LEFT JOIN departments d
+ON e.department_id = d.department_id;
+RIGHT JOIN
+
+Returns all records from the right table and matching records from the left.
+
+SELECT *
+FROM employees e
+RIGHT JOIN departments d
+ON e.department_id = d.department_id;
+FULL OUTER JOIN
+
+Returns matching and non-matching records from both tables.
+
+Not directly supported in MySQL as a native FULL OUTER JOIN.
+
+Conceptually:
+
+Left only + Matching + Right only
+CROSS JOIN
+
+Returns every possible combination.
+
+SELECT *
+FROM employees
+CROSS JOIN departments;
+SELF JOIN
+
+A table joins with itself.
+
+15: What is Self join ?
+
+A self join occurs when a table is joined with itself.
+
+Example: employees and managers are stored in the same table.
+
+employees
+
+employee_id | name     | manager_id
+1           | Rahul    | NULL
+2           | Amit     | 1
+3           | Priya    | 1
+
+Query:
+
+SELECT
+    e.name AS employee,
+    m.name AS manager
+FROM employees e
+LEFT JOIN employees m
+    ON e.manager_id = m.employee_id;
+
+Output conceptually:
+
+Employee | Manager
+---------|--------
+Rahul    | NULL
+Amit     | Rahul
+Priya    | Rahul
+Interview answer
+
+"A self join is a join where a table is joined with itself, usually using different aliases. It is useful for hierarchical relationships such as employee-manager relationships."
+
+16: What are window functions ?
+
+Window functions perform calculations across related rows without collapsing the rows into one row per group.
+
+Common window functions:
+
+ROW_NUMBER()
+RANK()
+DENSE_RANK()
+LAG()
+LEAD()
+SUM()
+AVG()
+COUNT()
+MIN()
+MAX()
+
+Example:
+
+SELECT
+    employee_id,
+    department,
+    salary,
+    RANK() OVER (
+        PARTITION BY department
+        ORDER BY salary DESC
+    ) AS salary_rank
+FROM employees;
+
+PARTITION BY divides the data into groups.
+
+ORDER BY determines the order within each group.
+
+GROUP BY vs Window Function
+
+GROUP BY:
+
+10 employees
+   ↓
+1 department result
+
+Window function:
+
+10 employees
+   ↓
+10 rows + calculated value
+Interview answer
+
+"Window functions perform calculations across a set of related rows while retaining the individual rows in the result."
+
+17: What is subquery and its importance?
+
+A subquery is a query inside another query.
+
+Example:
+
+SELECT *
+FROM employees
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM employees
+);
+
+The inner query:
+
+SELECT AVG(salary)
+FROM employees;
+
+calculates the average salary.
+
+The outer query finds employees earning above that average.
+
+Why are subqueries useful?
+
+They can help:
+
+Compare values with calculated results
+Filter based on another query
+Check existence
+Find maximum/minimum values
+Solve multi-step problems
+
+18: What is a stored procedure? How is it different from a function?
+
+Stored Procedure
+
+A stored procedure is a saved collection of SQL statements that can be executed when required.
+
+Example:
+
+DELIMITER //
+
+CREATE PROCEDURE GetEmployees()
+BEGIN
+    SELECT *
+    FROM employees;
+END //
+
+DELIMITER ;
+
+Execute:
+
+CALL GetEmployees();
+Function
+
+A function generally performs a calculation and returns a value.
+
+Example concept:
+
+SELECT CalculateBonus(salary)
+FROM employees;
+
+Difference
+
+| Stored Procedure                     | Function                                      |
+| ------------------------------------ | --------------------------------------------- |
+| Called using `CALL` in MySQL         | Can be used in expressions                    |
+| Can perform multiple operations      | Generally returns a value                     |
+| Can use OUT parameters               | Returns a defined value                       |
+| Commonly used for business processes | Commonly used for calculations/reusable logic |
+
+Interview answer
+
+"A stored procedure is a saved program containing SQL statements that can perform a task, while a function generally returns a value and can be used within SQL expressions."
+
+19: What are triggers in SQL? When are they used?
+
+A trigger is a database program that automatically executes when a specified event occurs on a table.
+
+Common events:
+
+INSERT
+UPDATE
+DELETE
+
+Example:
+
+CREATE TRIGGER after_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+INSERT INTO employee_log(employee_id, action)
+VALUES (NEW.employee_id, 'INSERT');
+
+When an employee is inserted, the trigger automatically records the event.
+
+Common uses
+Auditing
+Maintaining logs
+Automatically recording changes
+Enforcing certain business rules
+Maintaining derived information
+Interview answer
+
+"A trigger is an automatically executed database program that runs when a specified INSERT, UPDATE, or DELETE event occurs."
+
+20: What is SQL and No SQL database?
+
+SQL Database
+
+SQL databases are generally relational databases.
+
+Data is organized into tables.
+
+Examples:
+
+MySQL
+PostgreSQL
+SQL Server
+Oracle
+
+Example:
+
+Customers
+------------------
+ID | Name | City
+
+Advantages:
+
+Structured data
+Relationships
+SQL queries
+Strong consistency/transaction support
+Defined schema
+NoSQL Database
+
+NoSQL databases use non-relational data models such as:
+
+Document
+Key-value
+Wide-column
+Graph
+
+Examples:
+
+MongoDB
+Redis
+Cassandra
+Neo4j
+SQL vs NoSQL
+
+| SQL                       | NoSQL                                                     |
+| ------------------------- | --------------------------------------------------------- |
+| Relational                | Non-relational models                                     |
+| Tables                    | Documents/key-value/etc.                                  |
+| Usually predefined schema | Often flexible schema                                     |
+| Strong relationships      | Often designed for different scalability/data-model needs |
+| SQL language              | Database-specific APIs/query languages                    |
+
+Interview answer
+
+"SQL databases are relational databases that organize data into structured tables and relationships. NoSQL databases use non-relational models such as documents, key-value pairs, graphs, or wide columns and are often chosen when flexible schemas or particular scalability/data-model requirements are important."
+
+Practical Questions-- 
+| Question                 | Main concepts                                           |
+| ------------------------ | ------------------------------------------------------- |
+| Second highest salary    | `MAX`, `ORDER BY`, subquery, `LIMIT`, window functions  |
+
+Assume:
+
+employees
+
+employee_id | name | salary
+1           | A    | 90000
+2           | B    | 70000
+3           | C    | 80000
+4           | D    | 90000
+5           | E    | 60000
+Method 1 — ORDER BY + LIMIT
+SELECT DISTINCT salary
+FROM employees
+ORDER BY salary DESC
+LIMIT 1 OFFSET 1;
+
+Result:
+
+80000
+Method 2 — MAX + Subquery
+SELECT MAX(salary) AS second_highest_salary
+FROM employees
+WHERE salary < (
+    SELECT MAX(salary)
+    FROM employees
+);
+
+This is a very important interview approach.
+
+Method 3 — DENSE_RANK
+SELECT salary
+FROM (
+    SELECT
+        salary,
+        DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk
+    FROM employees
+) x
+WHERE rnk = 2;
+Which method to remember?
+
+Know all three:
+
+ORDER BY + LIMIT
+MAX + Subquery
+DENSE_RANK()
+
+| Duplicate records        | `GROUP BY`, `HAVING`, subquery, window functions        |
+
+Suppose we want to find duplicate emails.
+
+SELECT email, COUNT(*) AS duplicate_count
+FROM employees
+GROUP BY email
+HAVING COUNT(*) > 1;
+Why?
+GROUP BY email
+      ↓
+COUNT(*)
+      ↓
+HAVING COUNT(*) > 1
+
+Only emails occurring more than once are returned.
+
+Find complete duplicate rows using ROW_NUMBER
+SELECT *
+FROM (
+    SELECT
+        e.*,
+        ROW_NUMBER() OVER (
+            PARTITION BY name, email, salary
+            ORDER BY employee_id
+        ) AS rn
+    FROM employees e
+) x
+WHERE rn > 1;
+
+This identifies repeated records while retaining one occurrence as rn = 1.
+
+| Top 3 per department     | `RANK`, `DENSE_RANK`, `ROW_NUMBER`, partitioning        |
+
+This is one of the most important window-function interview questions.
+
+SELECT *
+FROM (
+    SELECT
+        employee_id,
+        name,
+        department,
+        salary,
+        DENSE_RANK() OVER (
+            PARTITION BY department
+            ORDER BY salary DESC
+        ) AS rnk
+    FROM employees
+) x
+WHERE rnk <= 3;
+Why PARTITION BY?
+
+Because we want ranking inside each department.
+
+IT
+  → Rank employees
+
+HR
+  → Rank employees
+
+Finance
+  → Rank employees
+RANK vs DENSE_RANK vs ROW_NUMBER
+
+Suppose salaries are:
+
+100000
+90000
+90000
+80000
+
+RANK():
+
+1
+2
+2
+4
+
+DENSE_RANK():
+
+1
+2
+2
+3
+
+ROW_NUMBER():
+
+1
+2
+3
+4
+
+For "top 3" questions, the correct function depends on whether ties should occupy the same rank or whether you need exactly three rows.
+
+| JOIN question            | `INNER JOIN`, `LEFT JOIN`, `NOT EXISTS`, anti-join      |
+
+Suppose:
+
+employees
+employee_id | name | department_id
+1           | Rahul | 10
+2           | Amit  | 20
+3           | Priya | 30
+4           | John  | NULL
+departments
+department_id | department_name
+10            | IT
+20            | HR
+30            | Finance
+40            | Sales
+INNER JOIN
+
+Find employees having a matching department.
+
+SELECT
+    e.name,
+    d.department_name
+FROM employees e
+INNER JOIN departments d
+    ON e.department_id = d.department_id;
+LEFT JOIN
+
+Find all employees, even if they don't have a department.
+
+SELECT
+    e.name,
+    d.department_name
+FROM employees e
+LEFT JOIN departments d
+    ON e.department_id = d.department_id;
+
+John will still appear.
+
+Find employees without a matching department
+LEFT JOIN / Anti-join
+SELECT e.*
+FROM employees e
+LEFT JOIN departments d
+    ON e.department_id = d.department_id
+WHERE d.department_id IS NULL;
+NOT EXISTS
+SELECT e.*
+FROM employees e
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM departments d
+    WHERE d.department_id = e.department_id
+);
+
+This is commonly called an anti-join pattern.
+
+| Above department average | `AVG`, correlated subquery, CTE, JOIN, window functions |
+
+This is a very important advanced interview question.
+
+Suppose:
+
+employee_id | name | department | salary
+1           | A    | IT         | 80000
+2           | B    | IT         | 50000
+3           | C    | IT         | 60000
+4           | D    | HR         | 70000
+5           | E    | HR         | 40000
+Method 1 — Correlated Subquery
+SELECT e.*
+FROM employees e
+WHERE e.salary > (
+    SELECT AVG(e2.salary)
+    FROM employees e2
+    WHERE e2.department = e.department
+);
+
+The inner query calculates the average salary for the current employee's department.
+
+Method 2 — CTE + JOIN
+WITH department_avg AS (
+    SELECT
+        department,
+        AVG(salary) AS avg_salary
+    FROM employees
+    GROUP BY department
+)
+SELECT
+    e.*
+FROM employees e
+JOIN department_avg d
+    ON e.department = d.department
+WHERE e.salary > d.avg_salary;
+
+This is often easier to explain in an interview.
+
+Method 3 — Window Function
+SELECT *
+FROM (
+    SELECT
+        e.*,
+        AVG(salary) OVER (
+            PARTITION BY department
+        ) AS department_avg
+    FROM employees e
+) x
+WHERE salary > department_avg;
+
+This is a particularly useful solution because the department average is calculated without collapsing employee rows.
+
+
+⭐ Your SQL Interview Cheat Sheet
+
+If you're preparing for a Data Analyst interview, memorize these patterns:
+
+| Interview Problem            | Main SQL Concept                            |
+| ---------------------------- | ------------------------------------------- |
+| Second highest salary        | `MAX`, subquery, `LIMIT`, `DENSE_RANK`      |
+| Duplicate records            | `GROUP BY`, `HAVING`                        |
+| Remove duplicates            | `ROW_NUMBER()`                              |
+| Top N per group              | `RANK`, `DENSE_RANK`, `ROW_NUMBER`          |
+| Employees without department | `LEFT JOIN`, `NOT EXISTS`                   |
+| Above department average     | Correlated subquery / CTE / Window Function |
+| Running total                | `SUM() OVER()`                              |
+| Previous record              | `LAG()`                                     |
+| Next record                  | `LEAD()`                                    |
+| Ranking                      | `RANK()` / `DENSE_RANK()`                   |
+| Department-wise average      | `GROUP BY` / `AVG() OVER()`                 |
+| Find NULLs                   | `IS NULL`                                   |
+| Find duplicates              | `GROUP BY + HAVING`                         |
+| Top salary                   | `MAX()`                                     |
+| Second salary                | `MAX()` + subquery                          |
+| Join tables                  | `JOIN ... ON`                               |
+| Find unmatched records       | `LEFT JOIN ... IS NULL` / `NOT EXISTS`      |
+
+
+One important correction to your original notes
+
+For interviews, I'd change these points:
+
+"Multi-row returns at least two rows" → better: returns multiple rows.
+"Foreign key provides shared keys" → better: maintains a relationship/referential integrity between tables.
+ADD COLUMN → it's an ALTER TABLE operation, not a separate DDL command.
+AND, OR, LIKE → don't call them clauses; they're operators/predicates.
++=, -=, etc. → don't list these as standard SQL operators.
+FULL OUTER JOIN → know that MySQL doesn't provide it as a native join syntax, unlike some other relational databases.
+DQL is commonly used to describe SELECT, but SQL standards/classifications can vary; don't get stuck arguing the category if an interviewer uses a different classification.
+
+This set covers a strong SQL interview foundation for a Data Analyst fresher, especially the practical patterns involving JOIN, GROUP BY, subqueries, CTEs, and window functions.
